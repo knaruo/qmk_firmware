@@ -11,12 +11,29 @@
 #define CTL_M       RCTL_T(KC_M)
 #define SFT_ENT     RSFT_T(KC_ENT)
 
+enum custom_keycodes {
+  TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
+  TO_LO_LAYER, /* move to lower layer */
+  TO_DEF_LAYER, /* to default layer */
+};
+
+enum custom_layers {
+  _L_BASE = 0,
+  _L_NUM,
+  _L_FN,
+  _L_3,
+  _L_4,
+  _L_MACROS,
+  _L_END,  /* end of supported layers */
+};
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [0] = LAYOUT_ortho_3x10_inv(
     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ESC,
-    CTL_Z,   ALT_X,   FN3_C,   FN4_V,   FN1_SPC, FN2_BSPC, FN5_B,   ALT_N,   CTL_M,   SFT_ENT
+    CTL_Z,   ALT_X,   FN3_C,   FN4_V,   FN1_SPC, TO_UP_LAYER, FN5_B,   ALT_N,   CTL_M,   SFT_ENT
   ),
 
   [1] = LAYOUT_ortho_3x10_inv(
@@ -71,4 +88,34 @@ void led_set_user(uint8_t usb_led) {
   } else {
     writePinHigh(B0);
   }
+}
+
+
+bool process_record_user(uint16_t keycode, keyrecord_t * record)
+{
+  uint8_t   highest_layer;
+
+  if (record->event.pressed) {
+    switch (keycode) {
+      case TO_UP_LAYER:
+        /* get the current layer id */
+        highest_layer = get_highest_layer(layer_state);
+        /* increment & turn on the layer above */
+        layer_on(highest_layer + 1U);
+        return false;
+        // break;
+
+      case TO_LO_LAYER:
+        /* get the current layer id */
+        highest_layer = get_highest_layer(layer_state);
+        /* just disable the current layer */
+        layer_off(highest_layer);
+        return false;
+        // break;
+
+      default:
+        break;
+    }
+  }
+  return true;
 }
