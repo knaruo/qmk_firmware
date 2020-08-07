@@ -18,49 +18,49 @@ enum custom_keycodes {
 };
 
 enum custom_layers {
-  _L_BASE = 0,
-  _L_NUM,
-  _L_FN,
-  _L_3,
-  _L_4,
-  _L_MACROS,
-  _L_END,  /* end of supported layers */
+  CL_BASE = 0,
+  CL_NUM,
+  CL_FN,
+  CL_3,
+  CL_4,
+  CL_MACROS,
+  CL_END,  /* end of supported layers */
 };
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [0] = LAYOUT_ortho_3x10_inv(
+  [CL_BASE] = LAYOUT_ortho_3x10_inv(
     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ESC,
     CTL_Z,   ALT_X,   FN3_C,   FN4_V,   FN1_SPC, TO_UP_LAYER, FN5_B,   ALT_N,   CTL_M,   SFT_ENT
   ),
 
-  [1] = LAYOUT_ortho_3x10_inv(
+  [CL_NUM] = LAYOUT_ortho_3x10_inv(
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,
     _______, _______, _______, _______, KC_DEL,  _______, _______, _______, _______, _______
   ),
 
-  [2] = LAYOUT_ortho_3x10_inv(
+  [CL_FN] = LAYOUT_ortho_3x10_inv(
     KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
     KC_F11,  KC_F12,  _______, _______, _______, _______, _______, _______, _______, KC_GRV,
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
-  [3] = LAYOUT_ortho_3x10_inv(
+  [CL_3] = LAYOUT_ortho_3x10_inv(
     _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
     KC_TAB,  _______, _______, _______, _______, KC_COMM, KC_DOT,  KC_SLSH, KC_SCLN, KC_QUOT,
     _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
   ),
 
-  [4] = LAYOUT_ortho_3x10_inv(
+  [CL_4] = LAYOUT_ortho_3x10_inv(
     _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
     KC_TAB,  _______, _______, _______, _______, KC_LABK, KC_RABK, KC_QUES, KC_COLN, KC_DQUO,
     _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
   ),
 
-  [5] = LAYOUT_ortho_3x10_inv(
+  [CL_MACROS] = LAYOUT_ortho_3x10_inv(
     KC_CALC, KC_WHOM, KC_MAIL, KC_MYCM, _______, _______, _______, _______, _______, KC_PSCR,
     _______, _______, _______, _______, _______, _______, _______, _______, BL_DEC,  BL_INC,
     _______, _______, _______, _______, RESET,   _______, _______, _______, _______, _______
@@ -100,16 +100,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t * record)
       case TO_UP_LAYER:
         /* get the current layer id */
         highest_layer = get_highest_layer(layer_state);
-        /* increment & turn on the layer above */
-        layer_on(highest_layer + 1U);
+        if (highest_layer < (uint8_t)(CL_END - 1U)) {
+          /* increment & turn on the layer above */
+          layer_on(highest_layer + 1U);
+        }
         return false;
         // break;
 
       case TO_LO_LAYER:
         /* get the current layer id */
         highest_layer = get_highest_layer(layer_state);
-        /* just disable the current layer */
-        layer_off(highest_layer);
+        if (highest_layer > (uint8_t)CL_BASE) {
+            /* just disable the current layer */
+            layer_off(highest_layer);
+        }
         return false;
         // break;
 
