@@ -54,24 +54,15 @@ uint8_t cur_dance(qk_tap_dance_state_t *state);
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 
+
 /***********************************************************
  * Constant Definitions
  **********************************************************/
 
 /* Keycode definitions */
 #define FN1_SPC     LT(1, KC_SPC)
-#define FN2_BSPC    LT(2, KC_BSPC)
-#define FN3_C       LT(3, KC_C)
-#define FN4_V       LT(4, KC_V)
-#define FN5_B       LT(5, KC_B)
-#define CTL_Z       CTL_T(KC_Z)
-#define ALT_X       ALT_T(KC_X)
-#define ALT_N       ALGR_T(KC_N)
-#define CTL_M       RCTL_T(KC_M)
 #define SFT_ENT     RSFT_T(KC_ENT)
-#define LAYER_CHG   MT(TO_DEF_LAYER, TO_UP_LAYER) /* MTを使ってもレイヤー切り替えがうまくいかない */
 #define CTL_ESC     RCTL_T(KC_ESC)
-#define WIN_ZKHK    LWIN(KC_ZKHK) /* WINキーへの切り替えがうまくいかない */
 
 
 /***********************************************************
@@ -147,47 +138,10 @@ void led_set_user(uint8_t usb_led) {
 }
 
 
-bool process_record_user(uint16_t keycode, keyrecord_t * record)
-{
+bool process_record_user(uint16_t keycode, keyrecord_t * record) {
   (void)keycode;
   (void)record;
-  // uint8_t   highest_layer;
-  // uint8_t   i;
 
-  // if (record->event.pressed) {
-  //   switch (keycode) {
-  //     case TO_UP_LAYER:
-  //       /* get the current layer id */
-  //       highest_layer = get_highest_layer(layer_state);
-  //       if (highest_layer < (uint8_t)(CL_END - 1U)) {
-  //         /* increment & turn on the layer above */
-  //         layer_on(highest_layer + 1U);
-  //       }
-  //       return false;
-  //       // break;
-
-  //     case TO_LO_LAYER:
-  //       /* get the current layer id */
-  //       highest_layer = get_highest_layer(layer_state);
-  //       if (highest_layer > (uint8_t)CL_BASE) {
-  //           /* just disable the current layer */
-  //           layer_off(highest_layer);
-  //       }
-  //       return false;
-  //       // break;
-
-  //     case TO_DEF_LAYER:
-  //       /* disable all higher layers -> go back to base layer */
-  //       for (i=(uint8_t)CL_BASE + 1; i<CL_END; i++) {
-  //         layer_off(i);
-  //       }
-  //       return false;
-  //       // break;
-
-  //     default:
-  //       break;
-  //   }
-  // }
   return true;
 }
 
@@ -260,4 +214,3 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
     ql_tap_state.state = 0;
 }
-
