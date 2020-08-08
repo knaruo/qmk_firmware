@@ -9,6 +9,7 @@ enum custom_keycodes {
 
 enum custom_layers {
   CL_BASE = 0,
+  CL_JP,
   CL_NUM,
   CL_FN,
   CL_3,
@@ -34,10 +35,18 @@ enum custom_layers {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
+  /* Base QWERTY key map */
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_ESC,
     KC_Z,    KC_X,    KC_C,    KC_V,   FN1_SPC,  LAYER_CHG, KC_B,   KC_N,   KC_M,   SFT_ENT
+  ),
+
+  /* Mainly to support Japanese input */
+  [CL_JP] = LAYOUT_ortho_3x10_inv(
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+    _______, KC_ZKHK, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
