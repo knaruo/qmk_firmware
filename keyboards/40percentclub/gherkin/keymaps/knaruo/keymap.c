@@ -17,8 +17,6 @@ enum custom_layers {
   CL_BASE = 0,
   CL_NUM,
   CL_FN,
-  CL_3,
-  CL_4,
   CL_MACROS,
   CL_END,  /* end of supported layers */
 };
@@ -103,21 +101,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [CL_FN] = LAYOUT_ortho_3x10_inv(
-    KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN,
-    KC_F11,  KC_F12,  _______, _______, _______, _______, _______, _______, _______, KC_GRV,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-  ),
-
-  [CL_3] = LAYOUT_ortho_3x10_inv(
-    _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS,
-    KC_TAB,  _______, _______, _______, _______, KC_COMM, KC_DOT,  KC_SLSH, KC_SCLN, KC_QUOT,
-    _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
-  ),
-
-  [CL_4] = LAYOUT_ortho_3x10_inv(
-    _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE,
-    KC_TAB,  _______, _______, _______, _______, KC_LABK, KC_RABK, KC_QUES, KC_COLN, KC_DQUO,
-    _______, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
+    KC_F1, KC_F2,   KC_F3, KC_F4,  KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,
+    KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______,
+    KC_PSCR, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
   ),
 
   [CL_MACROS] = LAYOUT_ortho_3x10_inv(
