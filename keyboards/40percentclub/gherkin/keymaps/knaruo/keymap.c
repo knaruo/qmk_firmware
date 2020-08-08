@@ -1,15 +1,5 @@
 #include QMK_KEYBOARD_H
 
-#define FN1_SPC     LT(1, KC_SPC)
-#define FN2_BSPC    LT(2, KC_BSPC)
-#define FN3_C       LT(3, KC_C)
-#define FN4_V       LT(4, KC_V)
-#define FN5_B       LT(5, KC_B)
-#define CTL_Z       CTL_T(KC_Z)
-#define ALT_X       ALT_T(KC_X)
-#define ALT_N       ALGR_T(KC_N)
-#define CTL_M       RCTL_T(KC_M)
-#define SFT_ENT     RSFT_T(KC_ENT)
 
 enum custom_keycodes {
   TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
@@ -28,12 +18,25 @@ enum custom_layers {
 };
 
 
+#define FN1_SPC     LT(1, KC_SPC)
+#define FN2_BSPC    LT(2, KC_BSPC)
+#define FN3_C       LT(3, KC_C)
+#define FN4_V       LT(4, KC_V)
+#define FN5_B       LT(5, KC_B)
+#define CTL_Z       CTL_T(KC_Z)
+#define ALT_X       ALT_T(KC_X)
+#define ALT_N       ALGR_T(KC_N)
+#define CTL_M       RCTL_T(KC_M)
+#define SFT_ENT     RSFT_T(KC_ENT)
+#define LAYER_CHG   MT(TO_DEF_LAYER, TO_UP_LAYER)
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ESC,
-    CTL_Z,   ALT_X,   FN3_C,   FN4_V,   FN1_SPC, TO_UP_LAYER, FN5_B,   ALT_N,   CTL_M,   SFT_ENT
+    KC_Z,    KC_X,    KC_C,    KC_V,   FN1_SPC,  LAYER_CHG, KC_B,   KC_N,   CTL_M,   SFT_ENT
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
@@ -94,6 +97,7 @@ void led_set_user(uint8_t usb_led) {
 bool process_record_user(uint16_t keycode, keyrecord_t * record)
 {
   uint8_t   highest_layer;
+  uint8_t   i;
 
   if (record->event.pressed) {
     switch (keycode) {
@@ -113,6 +117,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t * record)
         if (highest_layer > (uint8_t)CL_BASE) {
             /* just disable the current layer */
             layer_off(highest_layer);
+        }
+        return false;
+        // break;
+
+      case TO_DEF_LAYER:
+        /* disable all higher layers -> go back to base layer */
+        for (i=(uint8_t)CL_BASE + 1; i<CL_END; i++) {
+          layer_off(i);
         }
         return false;
         // break;
