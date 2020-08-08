@@ -29,8 +29,9 @@ enum custom_layers {
 #define ALT_N       ALGR_T(KC_N)
 #define CTL_M       RCTL_T(KC_M)
 #define SFT_ENT     RSFT_T(KC_ENT)
-#define LAYER_CHG   MT(TO_DEF_LAYER, TO_UP_LAYER)
+#define LAYER_CHG   MT(TO_DEF_LAYER, TO_UP_LAYER) /* MTを使ってもレイヤー切り替えがうまくいかない */
 #define CTL_ESC     RCTL_T(KC_ESC)
+#define WIN_ZKHK    LWIN(KC_ZKHK) /* WINキーへの切り替えがうまくいかない */
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -45,8 +46,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* Mainly to support Japanese input */
   [CL_JP] = LAYOUT_ortho_3x10_inv(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, KC_ZKHK, _______, _______, _______, _______, _______, _______, _______, _______
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,
+    _______, KC_ZKHK, _______, _______, _______, _______, _______, _______, _______, KC_BSPACE
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
