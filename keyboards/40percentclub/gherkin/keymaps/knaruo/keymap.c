@@ -1,6 +1,10 @@
 #include QMK_KEYBOARD_H
 
 
+/***********************************************************
+ * Data Type Definitions
+ **********************************************************/
+
 /* User custom keycode (for layer transition) */
 enum custom_keycodes {
   TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
@@ -20,6 +24,39 @@ enum custom_layers {
   CL_END,  /* end of supported layers */
 };
 
+// Tap Dance declarations
+enum {
+    TD_LAYER, /* single tap: Go to higher layer,
+                 double tap: Go to lower layer,
+                 hold: Go to default layer */
+};
+
+typedef struct {
+    bool is_press_action;
+    uint8_t state;
+} custom_tap_t;
+
+// Define a type for as many tap dance states as you need
+enum {
+    SINGLE_TAP = 1,
+    SINGLE_HOLD,
+    DOUBLE_TAP
+};
+
+
+/***********************************************************
+ * Function Prototypes
+ **********************************************************/
+// Function associated with all tap dances
+uint8_t cur_dance(qk_tap_dance_state_t *state);
+
+// Functions associated with individual tap dances
+void ql_finished(qk_tap_dance_state_t *state, void *user_data);
+void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+
+/***********************************************************
+ * Constant Definitions
+ **********************************************************/
 
 /* Keycode definitions */
 #define FN1_SPC     LT(1, KC_SPC)
@@ -37,15 +74,13 @@ enum custom_layers {
 #define WIN_ZKHK    LWIN(KC_ZKHK) /* WINキーへの切り替えがうまくいかない */
 
 
-// Tap Dance declarations
-enum {
-    TD_ESC_CAPS,
-};
+/***********************************************************
+ * Configurations / Variables
+ **********************************************************/
 
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    // Tap once for Escape, twice for Caps Lock
-    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
+    [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275)
 };
 
 
@@ -55,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_ESC,
-    KC_Z,    KC_X,    KC_C,    KC_V,   FN1_SPC,  LAYER_CHG, KC_B,   KC_N,   KC_M,   SFT_ENT
+    KC_Z,    KC_X,    KC_C,    KC_V,   FN1_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
 
   /* Mainly to support Japanese input */
@@ -97,67 +132,132 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+
+/***********************************************************
+ * Functions
+ **********************************************************/
+
 void keyboard_pre_init_user(void) {
   // Call the keyboard pre init code.
-
-  // Set our LED pins as output
-  setPinOutput(D5);
-  setPinOutput(B0);
 }
 
-void led_set_user(uint8_t usb_led) {
-  if (IS_LED_ON(usb_led, USB_LED_NUM_LOCK)) {
-    writePinLow(D5);
-  } else {
-    writePinHigh(D5);
-  }
 
-  if (IS_LED_ON(usb_led, USB_LED_CAPS_LOCK)) {
-    writePinLow(B0);
-  } else {
-    writePinHigh(B0);
-  }
+void led_set_user(uint8_t usb_led) {
+  (void)usb_led;
 }
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t * record)
 {
-  uint8_t   highest_layer;
-  uint8_t   i;
+  (void)keycode;
+  (void)record;
+  // uint8_t   highest_layer;
+  // uint8_t   i;
 
-  if (record->event.pressed) {
-    switch (keycode) {
-      case TO_UP_LAYER:
-        /* get the current layer id */
-        highest_layer = get_highest_layer(layer_state);
-        if (highest_layer < (uint8_t)(CL_END - 1U)) {
-          /* increment & turn on the layer above */
-          layer_on(highest_layer + 1U);
-        }
-        return false;
-        // break;
+  // if (record->event.pressed) {
+  //   switch (keycode) {
+  //     case TO_UP_LAYER:
+  //       /* get the current layer id */
+  //       highest_layer = get_highest_layer(layer_state);
+  //       if (highest_layer < (uint8_t)(CL_END - 1U)) {
+  //         /* increment & turn on the layer above */
+  //         layer_on(highest_layer + 1U);
+  //       }
+  //       return false;
+  //       // break;
 
-      case TO_LO_LAYER:
-        /* get the current layer id */
-        highest_layer = get_highest_layer(layer_state);
-        if (highest_layer > (uint8_t)CL_BASE) {
-            /* just disable the current layer */
-            layer_off(highest_layer);
-        }
-        return false;
-        // break;
+  //     case TO_LO_LAYER:
+  //       /* get the current layer id */
+  //       highest_layer = get_highest_layer(layer_state);
+  //       if (highest_layer > (uint8_t)CL_BASE) {
+  //           /* just disable the current layer */
+  //           layer_off(highest_layer);
+  //       }
+  //       return false;
+  //       // break;
 
-      case TO_DEF_LAYER:
-        /* disable all higher layers -> go back to base layer */
-        for (i=(uint8_t)CL_BASE + 1; i<CL_END; i++) {
-          layer_off(i);
-        }
-        return false;
-        // break;
+  //     case TO_DEF_LAYER:
+  //       /* disable all higher layers -> go back to base layer */
+  //       for (i=(uint8_t)CL_BASE + 1; i<CL_END; i++) {
+  //         layer_off(i);
+  //       }
+  //       return false;
+  //       // break;
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
   return true;
 }
+
+
+// Determine the current tap dance state
+uint8_t cur_dance(qk_tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (!state->pressed) return SINGLE_TAP;
+        else return SINGLE_HOLD;
+    } else if (state->count == 2) return DOUBLE_TAP;
+    else return 8;
+}
+
+
+// Initialize tap structure associated with example tap dance key
+static custom_tap_t ql_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+
+// Functions that control what our tap dance key does
+void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
+    uint8_t   highest_layer;
+
+    (void)state;
+    (void)user_data;
+
+    ql_tap_state.state = cur_dance(state);
+    switch (ql_tap_state.state) {
+        case SINGLE_TAP:
+            /* get the current layer id */
+            highest_layer = get_highest_layer(layer_state);
+            if (highest_layer < (uint8_t)(CL_END - 1U)) {
+              /* increment & turn on the layer above */
+              layer_on(highest_layer + 1U);
+            }
+            break;
+        case SINGLE_HOLD:
+            ql_reset(state, user_data);
+            break;
+        case DOUBLE_TAP:
+            /* get the current layer id */
+            highest_layer = get_highest_layer(layer_state);
+            if (highest_layer > (uint8_t)CL_BASE) {
+                /* just disable the current layer */
+                layer_off(highest_layer);
+            }
+            break;
+        default:
+          break;
+    }
+}
+
+
+void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
+    uint8_t   i;
+
+    (void)state;
+    (void)user_data;
+
+    // If the key was held down and now is released then switch off the layer
+    /* tap dance: Hold is detected.
+       Go to default layer */
+    if (ql_tap_state.state == SINGLE_HOLD) {
+      /* disable all higher layers -> go back to base layer */
+      for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
+        layer_off(i);
+      }
+    }
+    ql_tap_state.state = 0;
+}
+
