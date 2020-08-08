@@ -1,12 +1,14 @@
 #include QMK_KEYBOARD_H
 
 
+/* User custom keycode (for layer transition) */
 enum custom_keycodes {
   TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
   TO_LO_LAYER, /* move to lower layer */
   TO_DEF_LAYER, /* to default layer */
 };
 
+/* User custom keymap layers */
 enum custom_layers {
   CL_BASE = 0,
   CL_JP,
@@ -19,6 +21,7 @@ enum custom_layers {
 };
 
 
+/* Keycode definitions */
 #define FN1_SPC     LT(1, KC_SPC)
 #define FN2_BSPC    LT(2, KC_BSPC)
 #define FN3_C       LT(3, KC_C)
@@ -32,6 +35,18 @@ enum custom_layers {
 #define LAYER_CHG   MT(TO_DEF_LAYER, TO_UP_LAYER) /* MTを使ってもレイヤー切り替えがうまくいかない */
 #define CTL_ESC     RCTL_T(KC_ESC)
 #define WIN_ZKHK    LWIN(KC_ZKHK) /* WINキーへの切り替えがうまくいかない */
+
+
+// Tap Dance declarations
+enum {
+    TD_ESC_CAPS,
+};
+
+// Tap Dance definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+    // Tap once for Escape, twice for Caps Lock
+    [TD_ESC_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_CAPS),
+};
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
