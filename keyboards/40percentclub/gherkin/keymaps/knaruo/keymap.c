@@ -15,7 +15,6 @@ enum custom_keycodes {
 /* User custom keymap layers */
 enum custom_layers {
   CL_BASE = 0,
-  CL_JP,
   CL_NUM,
   CL_FN,
   CL_3,
@@ -31,6 +30,10 @@ enum {
                  hold: Go to default layer */
     TD_X_ZKHK, /* single tap: x,
                   double tap: 全角半角 */
+    TD_Q_ESC, /* single tap: q,
+                 double tap: Esc */
+    TD_A_TAB, /* single tap: a,
+                 double tap: Tab */
 };
 
 typedef struct {
@@ -65,6 +68,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 #define FN1_SPC     LT(1, KC_SPC)
 #define SFT_ENT     RSFT_T(KC_ENT)
 #define CTL_ESC     RCTL_T(KC_ESC)
+#define CTL_BSPC    RCTL_T(KC_BSPC)
 
 
 /***********************************************************
@@ -75,6 +79,8 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
     [TD_X_ZKHK] = ACTION_TAP_DANCE_DOUBLE(KC_X, KC_ZKHK),
+    [TD_Q_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_ESC),
+    [TD_A_TAB] = ACTION_TAP_DANCE_DOUBLE(KC_A, KC_TAB),
 };
 
 
@@ -82,16 +88,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Base QWERTY key map */
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_ESC,
+    TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    TD(TD_A_TAB),    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
     KC_Z,    TD(TD_X_ZKHK),    KC_C,    KC_V,   FN1_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
-  ),
-
-  /* Mainly to support Japanese input */
-  [CL_JP] = LAYOUT_ortho_3x10_inv(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSPACE
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
