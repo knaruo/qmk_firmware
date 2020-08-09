@@ -5,19 +5,19 @@
  * Data Type Definitions
  **********************************************************/
 
-/* User custom keycode (for layer transition) */
-enum custom_keycodes {
-  TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
-  TO_LO_LAYER, /* move to lower layer */
-  TO_DEF_LAYER, /* to default layer */
-};
+// /* User custom keycode (for layer transition) */
+// enum custom_keycodes {
+//   TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
+//   TO_LO_LAYER, /* move to lower layer */
+//   TO_DEF_LAYER, /* to default layer */
+// };
 
 /* User custom keymap layers */
 enum custom_layers {
   CL_BASE = 0,
   CL_NUM,
   CL_FN,
-  CL_MACROS,
+  // CL_MACROS,
   CL_END,  /* end of supported layers */
 };
 
@@ -110,11 +110,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_PSCR, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
   ),
 
-  [CL_MACROS] = LAYOUT_ortho_3x10_inv(
-    KC_CALC, KC_WHOM, KC_MAIL, KC_MYCM, _______, _______, _______, _______, _______, KC_PSCR,
-    _______, _______, _______, _______, _______, _______, _______, _______, BL_DEC,  BL_INC,
-    _______, _______, _______, _______, RESET,   _______, _______, _______, _______, _______
-  )
+  // [CL_MACROS] = LAYOUT_ortho_3x10_inv(
+  //   KC_CALC, KC_WHOM, KC_MAIL, KC_MYCM, _______, _______, _______, _______, _______, KC_PSCR,
+  //   _______, _______, _______, _______, _______, _______, _______, _______, BL_DEC,  BL_INC,
+  //   _______, _______, _______, _______, RESET,   _______, _______, _______, _______, _______
+  // )
 
 };
 
