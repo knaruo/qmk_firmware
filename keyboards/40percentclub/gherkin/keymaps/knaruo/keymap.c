@@ -5,19 +5,11 @@
  * Data Type Definitions
  **********************************************************/
 
-// /* User custom keycode (for layer transition) */
-// enum custom_keycodes {
-//   TO_UP_LAYER = SAFE_RANGE, /* move to upper layer */
-//   TO_LO_LAYER, /* move to lower layer */
-//   TO_DEF_LAYER, /* to default layer */
-// };
-
 /* User custom keymap layers */
 enum custom_layers {
   CL_BASE = 0,
   CL_NUM,
   CL_FN,
-  // CL_MACROS,
   CL_END,  /* end of supported layers */
 };
 
@@ -69,7 +61,6 @@ void xzk_reset(qk_tap_dance_state_t *state, void *user_data);
 /* Keycode definitions */
 #define FN1_SPC     LT(1, KC_SPC)
 #define SFT_ENT     RSFT_T(KC_ENT)
-#define CTL_ESC     RCTL_T(KC_ESC)
 #define CTL_BSPC    RCTL_T(KC_BSPC)
 #define KC_J_BSLS   KC_INT1 /* JIS \_ */
 #define SFT_Z       LSFT_T(KC_Z)
@@ -109,12 +100,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, _______,
     KC_PSCR, _______, _______, _______, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
   ),
-
-  // [CL_MACROS] = LAYOUT_ortho_3x10_inv(
-  //   KC_CALC, KC_WHOM, KC_MAIL, KC_MYCM, _______, _______, _______, _______, _______, KC_PSCR,
-  //   _______, _______, _______, _______, _______, _______, _______, _______, BL_DEC,  BL_INC,
-  //   _______, _______, _______, _______, RESET,   _______, _______, _______, _______, _______
-  // )
 
 };
 
