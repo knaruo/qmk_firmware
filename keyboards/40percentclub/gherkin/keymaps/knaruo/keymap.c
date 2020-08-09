@@ -26,8 +26,10 @@ enum {
     TD_LAYER, /* single tap: Go to higher layer,
                  double tap: Go to lower layer,
                  hold: Go to default layer */
-    TD_X_ZKHK, /* single tap: x,
-                  double tap: 全角半角 */
+    TD_X_ZK_WIN, /* single tap: x,
+                  double tap: 全角半角
+                  hold: Win */
+
     TD_Q_ESC, /* single tap: q,
                  double tap: Esc */
     TD_A_TAB, /* single tap: a,
@@ -56,6 +58,8 @@ uint8_t cur_dance(qk_tap_dance_state_t *state);
 // Functions associated with individual tap dances
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
+void xzk_finished(qk_tap_dance_state_t *state, void *user_data);
+void xzk_reset(qk_tap_dance_state_t *state, void *user_data);
 
 
 /***********************************************************
@@ -78,7 +82,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
-    [TD_X_ZKHK] = ACTION_TAP_DANCE_DOUBLE(KC_X, KC_ZKHK),
+    [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 275),
     [TD_Q_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_ESC),
     [TD_A_TAB] = ACTION_TAP_DANCE_DOUBLE(KC_A, KC_TAB),
 };
@@ -90,14 +94,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
     TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     TD(TD_A_TAB),    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
-    SFT_Z,    TD(TD_X_ZKHK),    KC_C,    KC_V,   FN1_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
+    KC_Z,    TD(TD_X_ZK_WIN),    KC_C,    KC_V,   FN1_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
     /* |-/= |^/~ |\/| | */                                /* |@/` |;/+ |:* |[/{ |]/} */
-    KC_MINS,   KC_EQL,   KC_JYEN,   _______,   _______,   KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS,
-    KC_LSFT, _______, _______, _______, KC_DEL,  _______, KC_COMM, KC_DOT, KC_SLSH, KC_J_BSLS
+    KC_MINS,   KC_EQL,   KC_JYEN,   _______, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, _______,
+    _______, _______, _______, KC_COMM, _______,  _______, KC_DOT, KC_SLSH, KC_J_BSLS, _______
   ),
 
   [CL_FN] = LAYOUT_ortho_3x10_inv(
@@ -158,7 +162,6 @@ static custom_tap_t ql_tap_state = {
 void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     uint8_t   highest_layer;
 
-    (void)state;
     (void)user_data;
 
     ql_tap_state.state = cur_dance(state);
@@ -204,4 +207,54 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
       }
     }
     ql_tap_state.state = 0;
+}
+
+
+static custom_tap_t xzk_tap_state = {
+    .is_press_action = true,
+    .state = 0
+};
+
+
+void xzk_finished(qk_tap_dance_state_t *state, void *user_data) {
+
+    (void)user_data;
+
+    xzk_tap_state.state = cur_dance(state);
+    switch (xzk_tap_state.state) {
+        case SINGLE_TAP:
+            register_code(KC_X);
+            break;
+        case SINGLE_HOLD:
+            register_code(KC_LWIN);
+            break;
+        case DOUBLE_TAP:
+            register_code(KC_ZKHK);
+            break;
+        default:
+          break;
+    }
+}
+
+
+void xzk_reset(qk_tap_dance_state_t *state, void *user_data) {
+
+    (void)state;
+    (void)user_data;
+
+    switch (xzk_tap_state.state) {
+        case SINGLE_TAP:
+            unregister_code(KC_X);
+            break;
+        case SINGLE_HOLD:
+            unregister_code(KC_LWIN);
+            break;
+        case DOUBLE_TAP:
+            unregister_code(KC_ZKHK);
+            break;
+        default:
+          break;
+    }
+    xzk_tap_state.state = 0;
+
 }
