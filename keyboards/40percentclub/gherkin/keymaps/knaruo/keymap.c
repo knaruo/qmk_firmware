@@ -52,6 +52,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 void xzk_finished(qk_tap_dance_state_t *state, void *user_data);
 void xzk_reset(qk_tap_dance_state_t *state, void *user_data);
+static void toggle_base_num_layer(void);
 
 
 /***********************************************************
@@ -59,7 +60,7 @@ void xzk_reset(qk_tap_dance_state_t *state, void *user_data);
  **********************************************************/
 
 /* Keycode definitions */
-#define FN1_SPC     LT(1, KC_SPC)
+// #define FN1_SPC     LT(1, KC_SPC)
 #define SFT_ENT     RSFT_T(KC_ENT)
 #define CTL_BSPC    RCTL_T(KC_BSPC)
 #define KC_J_BSLS   KC_INT1 /* JIS \_ */
@@ -85,13 +86,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_BASE] = LAYOUT_ortho_3x10_inv(
     TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     TD(TD_A_TAB),    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
-    SFT_Z,    TD(TD_X_ZK_WIN),    KC_C,    KC_V,   FN1_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
+    SFT_Z,    TD(TD_X_ZK_WIN),  KC_C,    KC_V,   KC_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10_inv(
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
     /* |-/= |^/~ |\/| | */                                /* |@/` |;/+ |:* |[/{ |]/} */
-    KC_MINS,   KC_EQL,   KC_JYEN,   _______, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, _______,
+    KC_MINS,   KC_EQL,   KC_JYEN,   KC_NO, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, _______,
     _______, _______, _______, KC_COMM, _______,  _______, KC_DOT, KC_SLSH, KC_J_BSLS, _______
   ),
 
@@ -145,39 +146,42 @@ static custom_tap_t ql_tap_state = {
 
 // Functions that control what our tap dance key does
 void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
-    uint8_t   highest_layer;
+    // uint8_t   highest_layer;
 
     (void)user_data;
 
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
-        case SINGLE_TAP:
-            /* get the current layer id */
-            highest_layer = get_highest_layer(layer_state);
-            if (highest_layer < (uint8_t)(CL_END - 1U)) {
-              /* increment & turn on the layer above */
-              layer_on(highest_layer + 1U);
-            }
-            break;
+        // case SINGLE_TAP:
+        //     /* get the current layer id */
+        //     highest_layer = get_highest_layer(layer_state);
+        //     if (highest_layer < (uint8_t)(CL_END - 1U)) {
+        //       /* increment & turn on the layer above */
+        //       layer_on(highest_layer + 1U);
+        //     }
+        //     break;
         case SINGLE_HOLD:
-            ql_reset(state, user_data);
+            layer_on(CL_FN);
             break;
-        case DOUBLE_TAP:
-            /* get the current layer id */
-            highest_layer = get_highest_layer(layer_state);
-            if (highest_layer > (uint8_t)CL_BASE) {
-                /* just disable the current layer */
-                layer_off(highest_layer);
-            }
-            break;
+        // case DOUBLE_TAP:
+        //     /* get the current layer id */
+        //     highest_layer = get_highest_layer(layer_state);
+        //     if (highest_layer > (uint8_t)CL_BASE) {
+        //         /* just disable the current layer */
+        //         layer_off(highest_layer);
+        //     }
+        //     break;
         default:
-          break;
+        case SINGLE_TAP:
+        case DOUBLE_TAP:
+            toggle_base_num_layer();
+            break;
     }
 }
 
 
 void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
-    uint8_t   i;
+    // uint8_t   i;
 
     (void)state;
     (void)user_data;
@@ -186,10 +190,11 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     /* tap dance: Hold is detected.
        Go to default layer */
     if (ql_tap_state.state == SINGLE_HOLD) {
-      /* disable all higher layers -> go back to base layer */
-      for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
-        layer_off(i);
-      }
+        layer_off(CL_FN);
+    //   /* disable all higher layers -> go back to base layer */
+    //   for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
+    //     layer_off(i);
+    //   }
     }
     ql_tap_state.state = 0;
 }
@@ -242,4 +247,19 @@ void xzk_reset(qk_tap_dance_state_t *state, void *user_data) {
     }
     xzk_tap_state.state = 0;
 
+}
+
+
+static void toggle_base_num_layer(void) {
+    uint8_t   highest_layer;
+
+    /* get the current layer id */
+    highest_layer = get_highest_layer(layer_state);
+
+    if (highest_layer == CL_BASE) {
+        layer_on(CL_NUM);
+    }
+    else {
+        layer_off(CL_NUM);
+    }
 }
