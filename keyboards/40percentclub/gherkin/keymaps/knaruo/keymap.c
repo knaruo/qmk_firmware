@@ -15,13 +15,12 @@ enum custom_layers {
 
 // Tap Dance declarations
 enum {
-    TD_LAYER, /* single tap: Go to higher layer,
-                 double tap: Go to lower layer,
-                 hold: Go to default layer */
+    TD_LAYER, /* single tap: toggle base/num layer
+                 double tap: toggle base/num layer
+                 hold: enable Fn layer */
     TD_X_ZK_WIN, /* single tap: x,
                   double tap: 全角半角
                   hold: Win */
-
     TD_Q_ESC, /* single tap: q,
                  double tap: Esc */
     TD_A_TAB, /* single tap: a,
@@ -152,25 +151,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
-        // case SINGLE_TAP:
-        //     /* get the current layer id */
-        //     highest_layer = get_highest_layer(layer_state);
-        //     if (highest_layer < (uint8_t)(CL_END - 1U)) {
-        //       /* increment & turn on the layer above */
-        //       layer_on(highest_layer + 1U);
-        //     }
-        //     break;
         case SINGLE_HOLD:
             layer_on(CL_FN);
             break;
-        // case DOUBLE_TAP:
-        //     /* get the current layer id */
-        //     highest_layer = get_highest_layer(layer_state);
-        //     if (highest_layer > (uint8_t)CL_BASE) {
-        //         /* just disable the current layer */
-        //         layer_off(highest_layer);
-        //     }
-        //     break;
         default:
         case SINGLE_TAP:
         case DOUBLE_TAP:
@@ -181,20 +164,13 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 
 
 void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
-    // uint8_t   i;
 
     (void)state;
     (void)user_data;
 
     // If the key was held down and now is released then switch off the layer
-    /* tap dance: Hold is detected.
-       Go to default layer */
     if (ql_tap_state.state == SINGLE_HOLD) {
         layer_off(CL_FN);
-    //   /* disable all higher layers -> go back to base layer */
-    //   for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
-    //     layer_off(i);
-    //   }
     }
     ql_tap_state.state = 0;
 }
