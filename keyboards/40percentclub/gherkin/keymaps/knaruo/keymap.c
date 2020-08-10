@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "custom_tap.h"
 
 
 /***********************************************************
@@ -27,24 +28,10 @@ enum {
                  double tap: Tab */
 };
 
-typedef struct {
-    bool is_press_action;
-    uint8_t state;
-} custom_tap_t;
-
-// Define a type for as many tap dance states as you need
-enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
-    DOUBLE_TAP
-};
-
 
 /***********************************************************
  * Function Prototypes
  **********************************************************/
-// Function associated with all tap dances
-uint8_t cur_dance(qk_tap_dance_state_t *state);
 
 // Functions associated with individual tap dances
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
@@ -127,16 +114,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t * record) {
 }
 
 
-// Determine the current tap dance state
-uint8_t cur_dance(qk_tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (!state->pressed) return SINGLE_TAP;
-        else return SINGLE_HOLD;
-    } else if (state->count == 2) return DOUBLE_TAP;
-    else return 8;
-}
-
-
 // Initialize tap structure associated with example tap dance key
 static custom_tap_t ql_tap_state = {
     .is_press_action = true,
@@ -159,8 +136,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
             back_to_default_layer();
             break;
         case SINGLE_TAP:
-        default:
             toggle_base_num_layer();
+            break;
+        default:
             break;
     }
 }
