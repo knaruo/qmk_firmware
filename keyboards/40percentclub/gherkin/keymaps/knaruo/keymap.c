@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include "custom_tap.h"
+#include "td_qesc.h"
 
 
 /***********************************************************
@@ -62,7 +63,7 @@ static void back_to_default_layer(void);
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
     [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 275),
-    [TD_Q_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_ESC),
+    [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 275),
     [TD_A_TAB] = ACTION_TAP_DANCE_DOUBLE(KC_A, KC_TAB),
 };
 
