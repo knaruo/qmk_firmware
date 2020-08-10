@@ -16,7 +16,7 @@ enum custom_layers {
 // Tap Dance declarations
 enum {
     TD_LAYER, /* single tap: toggle base/num layer
-                 double tap: toggle base/num layer
+                 double tap: to default layer
                  hold: enable Fn layer */
     TD_X_ZK_WIN, /* single tap: x,
                   double tap: 全角半角
@@ -52,6 +52,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 void xzk_finished(qk_tap_dance_state_t *state, void *user_data);
 void xzk_reset(qk_tap_dance_state_t *state, void *user_data);
 static void toggle_base_num_layer(void);
+static void back_to_default_layer(void);
 
 
 /***********************************************************
@@ -154,9 +155,11 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
         case SINGLE_HOLD:
             layer_on(CL_FN);
             break;
-        default:
-        case SINGLE_TAP:
         case DOUBLE_TAP:
+            back_to_default_layer();
+            break;
+        case SINGLE_TAP:
+        default:
             toggle_base_num_layer();
             break;
     }
@@ -237,5 +240,14 @@ static void toggle_base_num_layer(void) {
     }
     else {
         layer_off(CL_NUM);
+    }
+}
+
+
+static void back_to_default_layer(void) {
+    uint8_t i;
+    /* disable all higher layers -> go back to base layer */
+    for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
+        layer_off(i);
     }
 }
