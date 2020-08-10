@@ -18,10 +18,15 @@ void xzk_finished(qk_tap_dance_state_t *state, void *user_data){
         case SINGLE_TAP:
             register_code(KC_X);
             break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP:
+            register_code(KC_X);
+            register_code(KC_X);
+            break;
         case SINGLE_HOLD:
             register_code(KC_LWIN);
             break;
-        case DOUBLE_TAP:
+        case TRIPLE_TAP:
             register_code(KC_ZKHK);
             break;
         default:
@@ -40,10 +45,15 @@ void xzk_reset(qk_tap_dance_state_t *state, void *user_data){
         case SINGLE_TAP:
             unregister_code(KC_X);
             break;
+        case DOUBLE_TAP:
+        case DOUBLE_SINGLE_TAP:
+            unregister_code(KC_X);
+            unregister_code(KC_X);
+            break;
         case SINGLE_HOLD:
             unregister_code(KC_LWIN);
             break;
-        case DOUBLE_TAP:
+        case TRIPLE_TAP:
             unregister_code(KC_ZKHK);
             break;
         default:
