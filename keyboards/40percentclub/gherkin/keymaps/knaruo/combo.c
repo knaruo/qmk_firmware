@@ -10,6 +10,7 @@ enum combo_event {
     KL_COMM_COMBO,
     KL_MINUS_COMBO,
     KL_TAB_COMBO,
+    KL_DEL_COMBO,
 };
 
 const uint16_t PROGMEM unds_combo[] = {KC_N, KC_M, COMBO_END};
@@ -17,6 +18,7 @@ const uint16_t PROGMEM dot_combo[] = {KC_K, KC_L, COMBO_END};
 const uint16_t PROGMEM comm_combo[] = {KC_I, KC_O, COMBO_END};
 const uint16_t PROGMEM minus_combo[] = {KC_U, KC_I, COMBO_END};
 const uint16_t PROGMEM tab_combo[] = {KC_A, KC_S, COMBO_END};
+const uint16_t PROGMEM del_combo[] = {KC_O, KC_P, COMBO_END};
 
 // Register the combo action
 combo_t key_combos[COMBO_COUNT] = {
@@ -25,6 +27,7 @@ combo_t key_combos[COMBO_COUNT] = {
     [KL_COMM_COMBO] = COMBO_ACTION(comm_combo),
     [KL_MINUS_COMBO] = COMBO_ACTION(minus_combo),
     [KL_TAB_COMBO] = COMBO_ACTION(tab_combo),
+    [KL_DEL_COMBO] = COMBO_ACTION(del_combo),
 };
 
 // Called after a combo event is triggered
@@ -63,6 +66,13 @@ void process_combo_event(uint8_t combo_index, bool pressed) {
                 register_code(KC_TAB);
             } else {
                 unregister_code(KC_TAB);
+            }
+            break;
+        case KL_DEL_COMBO:
+            if (pressed) {
+                register_code(KC_DEL);
+            } else {
+                unregister_code(KC_DEL);
             }
             break;
         default:
