@@ -3,6 +3,7 @@
 #include "td_qesc.h"
 #include "td_xzk.h"
 
+extern rgblight_config_t rgblight_config;
 
 /***********************************************************
  * Data Type Definitions
@@ -174,4 +175,39 @@ static void back_to_default_layer(void) {
     for (i=(uint8_t)CL_BASE + 1U; i<CL_END; i++) {
         layer_off(i);
     }
+}
+
+const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+		{0,1,HSV_ORANGE}
+	);
+const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+		{0,1,HSV_GREEN}
+	);
+const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
+		{0,1,HSV_RED}
+);
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+		my_layer0_layer,
+		my_layer1_layer,
+		my_layer2_layer
+	);
+
+void keyboard_post_init_user(void) {
+	//Enable the LED layers
+	rgblight_layers = my_rgb_layers;
+  rgblight_enable();
+	layer_state_set_user(layer_state);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+    rgblight_set_layer_state(0, false);
+    rgblight_set_layer_state(1, layer_state_cmp(state, 1));
+    rgblight_set_layer_state(2, layer_state_cmp(state, 2));
+    if (layer_state_cmp(state, 0)) {
+      rgblight_disable_noeeprom();
+    }
+    else {
+      rgblight_enable_noeeprom();
+    }
+    return state;
 }
