@@ -17,15 +17,15 @@
 #pragma once
 
 #define TAPPING_TERM    175 // milliseconds
-#define COMBO_COUNT     10
+#define COMBO_COUNT     12
 #define COMBO_TERM      20
 
 // LED under grow
 #undef RGB_DI_PIN
 #undef RGBLED_NUM
 #define RGB_DI_PIN D3
-#define RGBLED_NUM 1
+#define RGBLED_NUM 2
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_SPLIT
-#define RGBLED_SPLIT { 0, 1 }
+#define RGBLED_SPLIT { 1, 1 }
 

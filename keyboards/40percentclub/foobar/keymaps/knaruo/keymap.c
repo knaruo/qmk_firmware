@@ -193,13 +193,13 @@ static void back_to_default_layer(void) {
 }
 
 const rgblight_segment_t PROGMEM my_layer0_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-		{0,1,HSV_ORANGE}
+		{0,2,HSV_ORANGE}
 	);
 const rgblight_segment_t PROGMEM my_layer1_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-		{0,1,HSV_GREEN}
+		{0,2,HSV_GREEN}
 	);
 const rgblight_segment_t PROGMEM my_layer2_layer[] = RGBLIGHT_LAYER_SEGMENTS(
-		{0,1,HSV_RED}
+		{0,2,HSV_RED}
 );
 const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
 		my_layer0_layer,
