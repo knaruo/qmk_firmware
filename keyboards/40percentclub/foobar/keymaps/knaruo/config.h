@@ -17,7 +17,7 @@
 #pragma once
 
 #define TAPPING_TERM    175 // milliseconds
-#define COMBO_COUNT     13
+#define COMBO_COUNT     19
 #define COMBO_TERM      20
 
 // LED under grow
