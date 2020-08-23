@@ -24,13 +24,13 @@ const uint16_t PROGMEM unds_combo[] = {KC_N, KC_M, COMBO_END};
 const uint16_t PROGMEM dot_combo[] = {KC_K, KC_L, COMBO_END};
 const uint16_t PROGMEM comm_combo[] = {KC_I, KC_O, COMBO_END};
 const uint16_t PROGMEM minus_combo[] = {KC_U, KC_I, COMBO_END};
-const uint16_t PROGMEM tab_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {KC_A, KC_S, COMBO_END};
 const uint16_t PROGMEM del_combo[] = {KC_O, KC_P, COMBO_END};
 const uint16_t PROGMEM cln_combo[] = {KC_J, KC_K, COMBO_END};
 const uint16_t PROGMEM slsh_combo[] = {KC_B, KC_N, COMBO_END};
 const uint16_t PROGMEM scln_combo[] = {KC_H, KC_J, COMBO_END};
-const uint16_t PROGMEM tab_combo2[] = {KC_EQL, KC_JYEN, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {KC_W, KC_E, COMBO_END};
+const uint16_t PROGMEM tab_combo2[] = {KC_EQL, KC_MINS, COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {KC_Q, KC_W, COMBO_END};
 const uint16_t PROGMEM rrbrc_combo[] = {KC_Y, KC_U, COMBO_END};
 const uint16_t PROGMEM lrbrc_combo[] = {KC_R, KC_T, COMBO_END};
 
