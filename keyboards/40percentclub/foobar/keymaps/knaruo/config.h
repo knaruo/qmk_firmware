@@ -18,7 +18,7 @@
 
 #define TAPPING_TERM    175 // milliseconds
 #define COMBO_COUNT     19
-#define COMBO_TERM      20
+#define COMBO_TERM      30
 
 // LED under grow
 #undef RGB_DI_PIN
