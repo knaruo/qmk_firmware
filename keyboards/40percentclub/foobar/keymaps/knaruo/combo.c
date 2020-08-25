@@ -15,7 +15,6 @@ enum combo_event {
     KL_SLSH_COMBO,
     KL_SCLN_COMBO,
     KL_TAB2_COMBO,
-    KL_ESC_COMBO,
     KL_RRBRC_COMBO,
     KL_LRBRC_COMBO,
     KL_DBLQUOT_COMBO,
