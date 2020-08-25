@@ -15,6 +15,7 @@
  */
 #include QMK_KEYBOARD_H
 #include "custom_tap.h"
+#include "td_qesc.h"
 #include "td_xzk.h"
 
 // extern rgblight_config_t rgblight_config;
@@ -39,6 +40,8 @@ enum {
     TD_X_ZK_WIN, /* single tap: x,
                   triple tap: �S�p���p
                   hold: Win */
+    TD_Q_ESC, /* single tap: q,
+                 double tap: Esc */
 };
 
 
@@ -73,6 +76,7 @@ static void back_to_default_layer(void);
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
     [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 200),
+    [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 200),
 };
 
 
@@ -80,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Base QWERTY key map */
   [CL_BASE] = LAYOUT_split(
-    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
+    TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
     SFT_Z,    TD(TD_X_ZK_WIN),  KC_C,    KC_V,   FN_NUM_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
