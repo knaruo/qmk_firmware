@@ -141,18 +141,41 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     (void)user_data;
 
     ql_tap_state.state = cur_dance(state);
+    // SINGLE_TAP = 1,
+    // SINGLE_HOLD,
+    // DOUBLE_TAP,
+    // DOUBLE_SINGLE_TAP,
+    // DOUBLE_HOLD,
+    // TRIPLE_TAP,
+    // TRIPLE_HOLD,
     switch (ql_tap_state.state) {
-        case SINGLE_HOLD:
-            layer_on(CL_FN);
-            break;
-        case DOUBLE_TAP:
-            back_to_default_layer();
-            break;
-        case SINGLE_TAP:
-            toggle_base_num_layer();
-            break;
-        default:
-            break;
+      case TRIPLE_TAP:
+        // Reset to default layer.
+        back_to_default_layer();
+        break;
+      case DOUBLE_TAP:
+        // Toggle the active layer between the base and the NUM
+        toggle_base_num_layer();
+        break;
+      case SINGLE_HOLD:
+        // Momentarily activate the function layer.
+        layer_on(CL_FN);
+        break;
+      // case SINGLE_TAP:
+      //   SEND_STRING("single tap");
+      //   break;
+      // case DOUBLE_SINGLE_TAP:
+      //   SEND_STRING("double single tap");
+      //   break;
+      // case DOUBLE_HOLD:
+      //   SEND_STRING("double hold");
+      //   break;
+      // case TRIPLE_HOLD:
+      //   SEND_STRING("triple hold");
+      //   break;
+      // default:
+      //   SEND_STRING("other pattern");
+      //   break;
     }
 }
 

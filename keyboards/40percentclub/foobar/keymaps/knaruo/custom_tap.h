@@ -9,13 +9,13 @@ typedef struct {
 
 // Define a type for as many tap dance states as you need
 enum {
-    SINGLE_TAP = 1,
-    SINGLE_HOLD,
+    SINGLE_TAP = 1, // 単押し
+    SINGLE_HOLD, // 単純に長押し
     DOUBLE_TAP,
-    DOUBLE_SINGLE_TAP,
-    DOUBLE_HOLD,
+    DOUBLE_SINGLE_TAP, // double tap後に他のキーで邪魔されたときのコード
+    DOUBLE_HOLD, // tap後に長押しする
     TRIPLE_TAP,
-    TRIPLE_HOLD,
+    TRIPLE_HOLD,  // double tap後に長押しする
 };
 
 
