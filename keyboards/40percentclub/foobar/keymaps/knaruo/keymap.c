@@ -34,11 +34,12 @@ enum custom_layers {
 
 // Tap Dance declarations
 enum {
-    TD_LAYER, /* single tap: toggle base/num layer
-                 double tap: to default layer
-                 hold: enable Fn layer */
+    TD_LAYER, /* single tap/double hold: DELETE
+                 double tap: toggle base layer and NUM layer (NUM lock)
+                 single hold: enable Fn layer
+                 triple tap: move to default layer */
     TD_X_ZK_WIN, /* single tap: x,
-                  triple tap: �S�p���p
+                  double tap: 全角・半角切り替え
                   hold: Win */
     TD_Q_ESC, /* single tap: q,
                  double tap: Esc */
@@ -94,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_NUM] = LAYOUT_split(
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
     /* |-/= |^/~ |\/| | */                                /* |@/` |;/+ |:* |[/{ |]/} */
-    KC_TAB,  KC_MINS,   KC_EQL,   KC_JYEN, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, CTL_DEL,
+    KC_TAB,  KC_MINS,   KC_EQL,   KC_JYEN, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, CTL_BSPC,
     KC_LSFT, _______, KC_LALT, KC_COMM, _______,  _______, KC_DOT, KC_SLSH, KC_J_BSLS, _______
   ),
 
@@ -152,13 +153,7 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
     if (!ql_tap_state.is_press_action) {
       ql_tap_state.state = cur_dance(state);
     }
-    // SINGLE_TAP = 1,
-    // SINGLE_HOLD,
-    // DOUBLE_TAP,
-    // DOUBLE_SINGLE_TAP,
-    // DOUBLE_HOLD,
-    // TRIPLE_TAP,
-    // TRIPLE_HOLD,
+
     switch (ql_tap_state.state) {
       case TRIPLE_TAP:
         // Reset to default layer.
@@ -180,15 +175,8 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
         ql_tap_state.is_press_action = true;
         toggle_key_reg_del();
         break;
-      // case DOUBLE_SINGLE_TAP:
-      //   SEND_STRING("double single tap");
-      //   break;
-      // case TRIPLE_HOLD:
-      //   SEND_STRING("triple hold");
-      //   break;
-      // default:
-      //   SEND_STRING("other pattern");
-      //   break;
+      default:
+        break;
     }
 }
 
@@ -206,9 +194,6 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
       case SINGLE_TAP:
       case DOUBLE_HOLD:
         unregister_code(KC_DEL);
-        // if (ql_tap_state.toggle_key_reg) {
-        //   unregister_code(KC_DEL);
-        // }
         break;
     }
     // Reset the tap state
@@ -219,7 +204,7 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
 
 
 static void toggle_key_reg_del(void) {
-  // Purpose is to send key codes while holding the tap dance key.
+  // Purpose is to send key codes continuously while holding the tap dance key.
   if (!ql_tap_state.toggle_key_reg) {
     register_code(KC_DEL);
     ql_tap_state.toggle_key_reg = true;
