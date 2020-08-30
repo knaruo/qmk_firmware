@@ -53,6 +53,7 @@ enum {
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 static void toggle_base_num_layer(void);
+static void toggle_key_reg_del(void);
 static void back_to_default_layer(void);
 
 
@@ -75,7 +76,7 @@ static void back_to_default_layer(void);
 
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
+    [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 200),
     [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 200),
     [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 200),
 };
@@ -128,9 +129,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t * record) {
 }
 
 
+typedef struct {
+    bool is_press_action;
+    bool toggle_key_reg;
+    uint8_t state;
+} custom_tap_layer_t;
+
+
 // Initialize tap structure associated with example tap dance key
-static custom_tap_t ql_tap_state = {
-    .is_press_action = true,
+static custom_tap_layer_t ql_tap_state = {
+    .is_press_action = false,
+    .toggle_key_reg = false,
     .state = 0
 };
 
@@ -140,7 +149,9 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 
     (void)user_data;
 
-    ql_tap_state.state = cur_dance(state);
+    if (!ql_tap_state.is_press_action) {
+      ql_tap_state.state = cur_dance(state);
+    }
     // SINGLE_TAP = 1,
     // SINGLE_HOLD,
     // DOUBLE_TAP,
@@ -161,14 +172,16 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
         // Momentarily activate the function layer.
         layer_on(CL_FN);
         break;
-      // case SINGLE_TAP:
-      //   SEND_STRING("single tap");
-      //   break;
+      case SINGLE_TAP:
+        register_code(KC_DEL);
+        break;
+      case DOUBLE_HOLD:
+        // Continuously send DELETE
+        ql_tap_state.is_press_action = true;
+        toggle_key_reg_del();
+        break;
       // case DOUBLE_SINGLE_TAP:
       //   SEND_STRING("double single tap");
-      //   break;
-      // case DOUBLE_HOLD:
-      //   SEND_STRING("double hold");
       //   break;
       // case TRIPLE_HOLD:
       //   SEND_STRING("triple hold");
@@ -185,11 +198,37 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     (void)state;
     (void)user_data;
 
-    // If the key was held down and now is released then switch off the layer
-    if (ql_tap_state.state == SINGLE_HOLD) {
+    switch (ql_tap_state.state) {
+      case SINGLE_HOLD:
+        // If the key was held down and now is released then switch off the layer
         layer_off(CL_FN);
+        break;
+      case SINGLE_TAP:
+      case DOUBLE_HOLD:
+        unregister_code(KC_DEL);
+        // if (ql_tap_state.toggle_key_reg) {
+        //   unregister_code(KC_DEL);
+        // }
+        break;
     }
+    // Reset the tap state
     ql_tap_state.state = 0;
+    ql_tap_state.is_press_action = false;
+    ql_tap_state.toggle_key_reg = false;
+}
+
+
+static void toggle_key_reg_del(void) {
+  // Purpose is to send key codes while holding the tap dance key.
+  if (!ql_tap_state.toggle_key_reg) {
+    register_code(KC_DEL);
+    ql_tap_state.toggle_key_reg = true;
+  }
+  else {
+    unregister_code(KC_DEL);
+    ql_tap_state.toggle_key_reg = false;
+  }
+
 }
 
 
