@@ -15,14 +15,16 @@ void qesc_finished(qk_tap_dance_state_t *state, void *user_data){
 
     qesc_tap_state.state = cur_dance(state);
     switch (qesc_tap_state.state) {
-        case SINGLE_TAP:
-            register_code(KC_Q);
-            break;
         case DOUBLE_TAP:
             register_code(KC_ESC);
             break;
+        case SINGLE_HOLD:
+            register_code(KC_LCTL);
+            break;
+        case SINGLE_TAP:
         default:
-          break;
+            register_code(KC_Q);
+            break;
     }
 
 }
@@ -34,14 +36,16 @@ void qesc_reset(qk_tap_dance_state_t *state, void *user_data){
     (void)user_data;
 
     switch (qesc_tap_state.state) {
-        case SINGLE_TAP:
-            unregister_code(KC_Q);
-            break;
         case DOUBLE_TAP:
             unregister_code(KC_ESC);
             break;
+        case SINGLE_HOLD:
+            unregister_code(KC_LCTL);
+            break;
+        case SINGLE_TAP:
         default:
-          break;
+            unregister_code(KC_Q);
+            break;
     }
     qesc_tap_state.state = 0;
 
