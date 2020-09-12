@@ -1,9 +1,24 @@
+/* Copyright 2018
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include QMK_KEYBOARD_H
 #include "custom_tap.h"
 #include "td_qesc.h"
 #include "td_xzk.h"
 
-extern rgblight_config_t rgblight_config;
+// extern rgblight_config_t rgblight_config;
 
 /***********************************************************
  * Data Type Definitions
@@ -19,11 +34,12 @@ enum custom_layers {
 
 // Tap Dance declarations
 enum {
-    TD_LAYER, /* single tap: toggle base/num layer
-                 double tap: to default layer
-                 hold: enable Fn layer */
+    TD_LAYER, /* single tap/double hold: DELETE
+                 double tap: toggle base layer and NUM layer (NUM lock)
+                 single hold: enable Fn layer
+                 triple tap: move to default layer */
     TD_X_ZK_WIN, /* single tap: x,
-                  triple tap: 全角半角
+                  double tap: 全角・半角切り替え
                   hold: Win */
     TD_Q_ESC, /* single tap: q,
                  double tap: Esc */
@@ -38,6 +54,7 @@ enum {
 void ql_finished(qk_tap_dance_state_t *state, void *user_data);
 void ql_reset(qk_tap_dance_state_t *state, void *user_data);
 static void toggle_base_num_layer(void);
+static void toggle_key_reg_del(void);
 static void back_to_default_layer(void);
 
 
@@ -49,6 +66,7 @@ static void back_to_default_layer(void);
 #define FN_NUM_SPC     LT(CL_NUM, KC_SPC)
 #define SFT_ENT     RSFT_T(KC_ENT)
 #define CTL_BSPC    RCTL_T(KC_BSPC)
+#define CTL_DEL     RCTL_T(KC_DEL)
 #define KC_J_BSLS   KC_INT1 /* JIS \_ */
 #define SFT_Z       LSFT_T(KC_Z)
 
@@ -59,32 +77,32 @@ static void back_to_default_layer(void);
 
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 275),
-    [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 275),
-    [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 275),
+    [TD_LAYER] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, ql_finished, ql_reset, 200),
+    [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 200),
+    [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 200),
 };
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   /* Base QWERTY key map */
-  [CL_BASE] = LAYOUT_ortho_3x10_inv(
+  [CL_BASE] = LAYOUT_ortho_3x10(
     TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
     SFT_Z,    TD(TD_X_ZK_WIN),  KC_C,    KC_V,   FN_NUM_SPC,  TD(TD_LAYER), KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
 
-  [CL_NUM] = LAYOUT_ortho_3x10_inv(
+  [CL_NUM] = LAYOUT_ortho_3x10(
     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
     /* |-/= |^/~ |\/| | */                                /* |@/` |;/+ |:* |[/{ |]/} */
-    KC_MINS,   KC_EQL,   KC_JYEN,   KC_NO, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, _______,
-    _______, _______, _______, KC_COMM, _______,  _______, KC_DOT, KC_SLSH, KC_J_BSLS, _______
+    KC_TAB,  KC_MINS,   KC_EQL,   KC_JYEN, KC_LBRC, KC_SCLN, KC_QUOT, KC_RBRC, KC_BSLS, CTL_BSPC,
+    KC_LSFT, _______, KC_LALT, KC_COMM, _______,  _______, KC_DOT, KC_SLSH, KC_J_BSLS, _______
   ),
 
-  [CL_FN] = LAYOUT_ortho_3x10_inv(
-    KC_F1, KC_F2,   KC_F3, KC_F4,  KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,
-    KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, LALT(LCTL(KC_DEL)),
-    KC_PSCR, _______, KC_MHEN, KC_HENK, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
+  [CL_FN] = LAYOUT_ortho_3x10(
+    KC_F11, KC_F2,   KC_F3, KC_F4,  KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10,
+    KC_TAB,  KC_F12,  _______, _______, KC_PSCR, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, LALT(LCTL(KC_DEL)),
+    KC_LSFT, _______, _______, KC_HENK, _______, _______, KC_HOME, KC_PGDN, KC_PGUP, KC_END
   ),
 
 };
@@ -112,9 +130,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t * record) {
 }
 
 
+typedef struct {
+    bool is_press_action;
+    bool toggle_key_reg;
+    uint8_t state;
+} custom_tap_layer_t;
+
+
 // Initialize tap structure associated with example tap dance key
-static custom_tap_t ql_tap_state = {
-    .is_press_action = true,
+static custom_tap_layer_t ql_tap_state = {
+    .is_press_action = false,
+    .toggle_key_reg = false,
     .state = 0
 };
 
@@ -124,19 +150,33 @@ void ql_finished(qk_tap_dance_state_t *state, void *user_data) {
 
     (void)user_data;
 
-    ql_tap_state.state = cur_dance(state);
+    if (!ql_tap_state.is_press_action) {
+      ql_tap_state.state = cur_dance(state);
+    }
+
     switch (ql_tap_state.state) {
-        case SINGLE_HOLD:
-            layer_on(CL_FN);
-            break;
-        case DOUBLE_TAP:
-            back_to_default_layer();
-            break;
-        case SINGLE_TAP:
-            toggle_base_num_layer();
-            break;
-        default:
-            break;
+      case TRIPLE_TAP:
+        // Reset to default layer.
+        back_to_default_layer();
+        break;
+      case DOUBLE_TAP:
+        // Toggle the active layer between the base and the NUM
+        toggle_base_num_layer();
+        break;
+      case SINGLE_HOLD:
+        // Momentarily activate the function layer.
+        layer_on(CL_FN);
+        break;
+      case SINGLE_TAP:
+        register_code(KC_DEL);
+        break;
+      case DOUBLE_HOLD:
+        // Continuously send DELETE
+        ql_tap_state.is_press_action = true;
+        toggle_key_reg_del();
+        break;
+      default:
+        break;
     }
 }
 
@@ -146,11 +186,34 @@ void ql_reset(qk_tap_dance_state_t *state, void *user_data) {
     (void)state;
     (void)user_data;
 
-    // If the key was held down and now is released then switch off the layer
-    if (ql_tap_state.state == SINGLE_HOLD) {
+    switch (ql_tap_state.state) {
+      case SINGLE_HOLD:
+        // If the key was held down and now is released then switch off the layer
         layer_off(CL_FN);
+        break;
+      case SINGLE_TAP:
+      case DOUBLE_HOLD:
+        unregister_code(KC_DEL);
+        break;
     }
+    // Reset the tap state
     ql_tap_state.state = 0;
+    ql_tap_state.is_press_action = false;
+    ql_tap_state.toggle_key_reg = false;
+}
+
+
+static void toggle_key_reg_del(void) {
+  // Purpose is to send key codes continuously while holding the tap dance key.
+  if (!ql_tap_state.toggle_key_reg) {
+    register_code(KC_DEL);
+    ql_tap_state.toggle_key_reg = true;
+  }
+  else {
+    unregister_code(KC_DEL);
+    ql_tap_state.toggle_key_reg = false;
+  }
+
 }
 
 
