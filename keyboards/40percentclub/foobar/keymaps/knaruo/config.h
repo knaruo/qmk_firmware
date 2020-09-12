@@ -17,6 +17,7 @@
 #pragma once
 
 #define TAPPING_TERM    175 // milliseconds
+#define IGNORE_MOD_TAP_INTERRUPT
 #define COMBO_COUNT     18
 #define COMBO_TERM      30
 
