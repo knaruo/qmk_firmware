@@ -16,7 +16,6 @@
 #include QMK_KEYBOARD_H
 #include "custom_tap.h"
 #include "td_qesc.h"
-#include "td_xzk.h"
 
 // extern rgblight_config_t rgblight_config;
 
@@ -34,9 +33,6 @@ enum custom_layers {
 
 // Tap Dance declarations
 enum {
-    TD_X_ZK_WIN, /* single tap: x,
-                  double tap: 全角・半角切り替え
-                  hold: Win */
     TD_Q_ESC, /* single tap: q,
                  double tap: Esc */
 };
@@ -66,7 +62,6 @@ enum {
 
 // Tap Dance definitions
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_X_ZK_WIN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, xzk_finished, xzk_reset, 200),
     [TD_Q_ESC] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, qesc_finished, qesc_reset, 200),
 };
 
@@ -77,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_BASE] = LAYOUT_ortho_3x10(
     TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
-    SFT_Z,    TD(TD_X_ZK_WIN),  KC_C,    KC_V,   SPC_LY_NUM,  DEL_LY_FN, KC_B,   KC_N,   KC_M,   SFT_ENT
+    SFT_Z,    LWIN_T(KC_X),  KC_C,    KC_V,   SPC_LY_NUM,  DEL_LY_FN, KC_B,   KC_N,   KC_M,   SFT_ENT
   ),
 
   [CL_NUM] = LAYOUT_ortho_3x10(
