@@ -18,7 +18,7 @@
 
 #define TAPPING_TERM    175 // milliseconds
 #define IGNORE_MOD_TAP_INTERRUPT
-#define COMBO_COUNT     5
+#define COMBO_COUNT     1
 #define COMBO_TERM      30
 
 // LED under grow
