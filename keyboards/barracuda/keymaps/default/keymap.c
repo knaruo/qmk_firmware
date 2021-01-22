@@ -50,9 +50,7 @@ enum {
 #define DEL_LY_FN      LT(CL_FN, KC_DEL)
 #define SFT_ENT     RSFT_T(KC_ENT)
 #define CTL_BSPC    RCTL_T(KC_BSPC)
-#define CTL_DEL     RCTL_T(KC_DEL)
 #define KC_J_BSLS   KC_INT1 /* JIS \_ */
-#define SFT_Z       LSFT_T(KC_Z)
 
 
 /***********************************************************
@@ -71,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [CL_BASE] = LAYOUT(
     KC_TAB, TD(TD_Q_ESC),    KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
     KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,      KC_H,    KC_J,    KC_K,    KC_L,    CTL_BSPC,
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,   SPC_LY_NUM, DEL_LY_FN, KC_B,   KC_N,   KC_M,  SFT_ENT
+    KC_LSFT, KC_Z,    LWIN_T(KC_X),    KC_C,    KC_V,   SPC_LY_NUM, DEL_LY_FN, KC_B,   KC_N,   KC_M,  SFT_ENT
   ),
 
   [CL_NUM] = LAYOUT(
