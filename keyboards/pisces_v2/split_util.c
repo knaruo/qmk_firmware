@@ -37,51 +37,7 @@
 
 volatile bool isLeftHand = true;
 
-#if defined(SPLIT_USB_DETECT)
-#    if defined(PROTOCOL_LUFA)
-static inline bool usbHasActiveConnection(void) { return USB_Device_IsAddressSet(); }
-static inline void usbDisable(void) {
-    USB_Disable();
-    USB_DeviceState = DEVICE_STATE_Unattached;
-}
-#    elif defined(PROTOCOL_CHIBIOS)
-static inline bool usbHasActiveConnection(void) { return usbGetDriverStateI(&USBD1) == USB_ACTIVE; }
-static inline void usbDisable(void) { usbStop(&USBD1); }
-#    elif defined(PROTOCOL_VUSB)
-static inline bool usbHasActiveConnection(void) {
-    usbPoll();
-    return usbConfiguration;
-}
-static inline void usbDisable(void) { usbDeviceDisconnect(); }
-#    else
-static inline bool usbHasActiveConnection(void) { return true; }
-static inline void usbDisable(void) {}
-#    endif
-
-bool usbIsActive(void) {
-    for (uint8_t i = 0; i < (SPLIT_USB_TIMEOUT / SPLIT_USB_TIMEOUT_POLL); i++) {
-        // This will return true if a USB connection has been established
-        if (usbHasActiveConnection()) {
-            return true;
-        }
-        wait_ms(SPLIT_USB_TIMEOUT_POLL);
-    }
-
-    // Avoid NO_USB_STARTUP_CHECK - Disable USB as the previous checks seem to enable it somehow
-    usbDisable();
-
-    return false;
-}
-#elif defined(PROTOCOL_LUFA)
-static inline bool usbIsActive(void) {
-    USB_OTGPAD_On();  // enables VBUS pad
-    wait_us(5);
-
-    return USB_VBUS_GetStatus();  // checks state of VBUS
-}
-#else
 static inline bool usbIsActive(void) { return true; }
-#endif
 
 #ifdef SPLIT_HAND_MATRIX_GRID
 void matrix_io_delay(void);
