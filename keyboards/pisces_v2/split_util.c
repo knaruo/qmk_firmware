@@ -37,8 +37,6 @@
 
 volatile bool isLeftHand = true;
 
-static inline bool usbIsActive(void) { return true; }
-
 #ifdef SPLIT_HAND_MATRIX_GRID
 void matrix_io_delay(void);
 
@@ -57,23 +55,16 @@ static uint8_t peek_matrix_intersection(pin_t out_pin, pin_t in_pin) {
 #endif
 
 __attribute__((weak)) bool is_keyboard_left(void) {
+    return eeconfig_read_handedness();
 #if defined(SPLIT_HAND_PIN)
     // Test pin SPLIT_HAND_PIN for High/Low, if low it's right hand
+    // setPinInputHigh(SPLIT_HAND_PIN);
     setPinInput(SPLIT_HAND_PIN);
     return readPin(SPLIT_HAND_PIN);
-#elif defined(SPLIT_HAND_MATRIX_GRID)
-#   ifdef SPLIT_HAND_MATRIX_GRID_LOW_IS_RIGHT
-    return peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
-#   else
-    return !peek_matrix_intersection(SPLIT_HAND_MATRIX_GRID);
-#   endif
 #elif defined(EE_HANDS)
     return eeconfig_read_handedness();
-#elif defined(MASTER_RIGHT)
-    return !is_keyboard_master();
 #endif
-
-    return is_keyboard_master();
+    return true;
 }
 
 __attribute__((weak)) bool is_keyboard_master(void) {
@@ -81,7 +72,7 @@ __attribute__((weak)) bool is_keyboard_master(void) {
 
     // only check once, as this is called often
     if (usbstate == UNKNOWN) {
-        usbstate = usbIsActive() ? MASTER : SLAVE;
+        usbstate = is_keyboard_left() ? MASTER : SLAVE;
     }
 
     return (usbstate == MASTER);
