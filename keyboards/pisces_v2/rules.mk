@@ -40,4 +40,5 @@ LAYOUTS = ortho_3x12p2  # total 38
 SRC += split_util.c \
 	   transport.c \
 	   matrix.c \
-	   serial.c
+	   serial.c \
+	   matrix_common.c
