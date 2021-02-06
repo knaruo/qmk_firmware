@@ -32,13 +32,7 @@ AUDIO_ENABLE = no           # Audio output
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 
 # Enable generic behavior for split boards
-# SPLIT_KEYBOARD = yes
-CUSTOM_MATRIX = yes			# For providing custom matrix.c (in this case, override regular matrix.c with split matrix.c)
+SPLIT_KEYBOARD = yes
+# CUSTOM_MATRIX = yes			# For providing custom matrix.c (in this case, override regular matrix.c with split matrix.c)
 
 LAYOUTS = ortho_3x12p2  # total 38
-
-SRC += split_util.c \
-	   transport.c \
-	   matrix.c \
-	   serial.c \
-	   matrix_common.c
