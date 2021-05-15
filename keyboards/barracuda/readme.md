@@ -1,12 +1,17 @@
 # barracuda
 
-![barracuda](imgur.com image replace me!)
+![barracuda](https://imgur.com/pTyxOtv.jpg)
 
-*A short description of the keyboard/project*
+30% Ortholinear keyboard with low profile switches
 
-* Keyboard Maintainer: [knaruo](https://github.com/yourusername)
-* Hardware Supported: *The PCBs, controllers supported*
-* Hardware Availability: *Links to where you can find this hardware*
+* Keyboard Maintainer: [knaruo](https://github.com/knaruo)
+* Hardware Supported: barracuda PCB, ATmega32U2
+* Hardware Availability: [PCB and Plate](https://github.com/knaruo/barracuda)
+
+Getting the board into bootloader mode:
+
+To be able to flash firmware onto this board, you'll need to bring the micro controller into bootloader mode. Press the reset button (RSTSW1) on the bottom side of the PCB to enable the bootloader mode.
+
 
 Make example for this keyboard (after setting up your build environment):
 

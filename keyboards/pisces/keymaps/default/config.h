@@ -1,4 +1,4 @@
-/* Copyright 2018
+/* Copyright 2021 knaruo
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,3 @@
 
 #define TAPPING_TERM    175 // milliseconds
 #define IGNORE_MOD_TAP_INTERRUPT
-
-// LED under grow
-#undef RGB_DI_PIN
-#undef RGBLED_NUM
-#define RGB_DI_PIN D3
-#define RGBLED_NUM 2
-#define RGBLIGHT_LAYERS
-#define RGBLIGHT_SPLIT
-#define RGBLED_SPLIT { 1, 1 }
-

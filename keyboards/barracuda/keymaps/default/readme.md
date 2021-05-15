@@ -1,1 +1,1 @@
-# The default keymap for barracuda
+# The default keymap

@@ -1,1 +1,1 @@
-# The default keymap for pisces
+# The default keymap

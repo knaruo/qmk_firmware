@@ -1,12 +1,17 @@
 # pisces
 
-![pisces](imgur.com image replace me!)
+![pisces](https://i.imgur.com/rzIhYLZ.png)
 
-*A short description of the keyboard/project*
+(Less than) 40% Ortholinear split keyboard
 
-* Keyboard Maintainer: [knaruo](https://github.com/yourusername)
-* Hardware Supported: *The PCBs, controllers supported*
-* Hardware Availability: *Links to where you can find this hardware*
+* Keyboard Maintainer: [knaruo](https://github.com/knaruo)
+* Hardware Supported: pisces PCB, ATmega32U2
+* Hardware Availability: [PCB and Plate](https://github.com/knaruo/pisces)
+
+Getting the board into bootloader mode:
+
+To be able to flash firmware onto this board, you'll need to bring the micro controller into bootloader mode. Press the reset button (RSTSW1) on the top side of the PCB to enable the bootloader mode.
+
 
 Make example for this keyboard (after setting up your build environment):
 
